@@ -1,4 +1,4 @@
-FROM vaida/ubuntu:14.04.20170123
+FROM vaida/ubuntu:latest
 MAINTAINER raja.vaida@gmail.com
 
 ENV PG_APP_HOME="/etc/docker-postgresql"\
