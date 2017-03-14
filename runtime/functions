@@ -371,7 +371,7 @@ create_replication_user() {
 
 create_clipper_base_tbl() {
 	echo "Creating base table!"
-	psql -v ON_ERROR_STOP=1 -U ${PG_USER} -d ${DB_NAME} -a -f baseTable.sql
+	psql -v ON_ERROR_STOP=1 -U ${PG_USER} -d ${DB_NAME} -a -f ${PG_APP_HOME}/baseTable.sql
 }
 
 configure_postgresql() {
