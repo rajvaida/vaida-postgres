@@ -369,6 +369,11 @@ create_replication_user() {
   fi
 }
 
+create_clipper_base_tbl() {
+	echo "Creating base table!"
+	psql -v ON_ERROR_STOP=1 -U ${PG_USER} -d ${DB_NAME} -a -f baseTable.sql
+}
+
 configure_postgresql() {
   initialize_database
   configure_recovery
@@ -382,8 +387,7 @@ configure_postgresql() {
   create_user
   create_database
   create_replication_user
-  
-  psql -v ON_ERROR_STOP=1 -U ${PG_USER} -d ${DB_NAME} -a -f baseTable.sql
+  create_clipper_base_tbl
 
   # stop the postgres server
   exec_as_postgres ${PG_BINDIR}/pg_ctl -D ${PG_DATADIR} -w stop >/dev/null
