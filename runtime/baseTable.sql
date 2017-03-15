@@ -11,3 +11,6 @@ CREATE TABLE paypaldata (
 
 GRANT ALL on paypaldata TO Clipper;
 GRANT ALL on paypaldata TO postgres;
+
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to Clipper;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to postgres;
