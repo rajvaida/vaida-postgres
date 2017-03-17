@@ -1,10 +1,10 @@
 CREATE TABLE paypaldata ( 
     record_id    serial PRIMARY KEY, 
 	record_stamp timestamp default current_timestamp, 
-    order_number varchar(40), 
+    product_csv  text, 
     contact_id   varchar(40), 
-    pp_string	 varchar(500) NOT NULL, 
-	pp_respo	 varchar(500) NOT NULL, 
+    pp_string	 text NOT NULL, 
+	pp_respo	 text NOT NULL, 
     pp_amount    double precision, 
 	order_amount double precision 
 ); 
