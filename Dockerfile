@@ -1,33 +1,73 @@
-FROM vaida/ubuntu:latest
-MAINTAINER raja.vaida@gmail.com
+FROM centos:latest
 
-ENV PG_APP_HOME="/etc/docker-postgresql"\
-    PG_VERSION=9.6 \
-    PG_USER=postgres \
-    PG_HOME=/var/lib/postgresql \
-    PG_RUNDIR=/run/postgresql \
-    PG_LOGDIR=/var/log/postgresql \
-    PG_CERTDIR=/etc/postgresql/certs
+# Update CentOS 7
+RUN yum update -y && yum upgrade -y
 
-ENV PG_BINDIR=/usr/lib/postgresql/${PG_VERSION}/bin \
-    PG_DATADIR=${PG_HOME}/${PG_VERSION}/main
+# Install packages
+RUN yum install -y unzip wget
 
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
- && echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
- && apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y acl \
-      postgresql-${PG_VERSION} postgresql-client-${PG_VERSION} postgresql-contrib-${PG_VERSION} \
- && ln -sf ${PG_DATADIR}/postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf \
- && ln -sf ${PG_DATADIR}/pg_hba.conf /etc/postgresql/${PG_VERSION}/main/pg_hba.conf \
- && ln -sf ${PG_DATADIR}/pg_ident.conf /etc/postgresql/${PG_VERSION}/main/pg_ident.conf \
- && rm -rf ${PG_HOME} \
- && rm -rf /var/lib/apt/lists/*
+# Install EPEL Repository
+RUN yum install -y epel-release
 
-COPY runtime/ ${PG_APP_HOME}/
-COPY entrypoint.sh /sbin/entrypoint.sh
-RUN chmod 755 /sbin/entrypoint.sh
+# Clean CentOS 7
+RUN yum clean all
 
-EXPOSE 5432/tcp
-VOLUME ["${PG_HOME}", "${PG_RUNDIR}"]
-WORKDIR ${PG_HOME}
-ENTRYPOINT ["/sbin/entrypoint.sh"]
+# Set the environment variables
+ENV HOME /root
+
+# Working directory
+WORKDIR /root
+
+# Default command
+CMD ["bash"]
+
+
+# Postgresql version
+ENV PG_VERSION 9.6
+ENV PGVERSION 96
+
+# Set the environment variables
+ENV HOME /var/lib/pgsql
+ENV PGDATA /var/lib/pgsql/9.4/data
+
+# Install postgresql and run InitDB
+RUN rpm -vih https://download.postgresql.org/pub/repos/yum/$PG_VERSION/redhat/rhel-7-x86_64/pgdg-centos$PGVERSION-$PG_VERSION-2.noarch.rpm && \
+    yum update -y && \
+    yum install -y sudo \
+    pwgen \
+    postgresql$PGVERSION \
+    postgresql$PGVERSION-server \
+    postgresql$PGVERSION-contrib && \
+    yum clean all
+
+# Copy
+COPY data/postgresql-setup /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup
+
+# Working directory
+WORKDIR /var/lib/pgsql
+
+# Run initdb
+RUN /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup initdb
+
+# Copy config file
+COPY data/postgresql.conf /var/lib/pgsql/$PG_VERSION/data/postgresql.conf
+COPY data/pg_hba.conf /var/lib/pgsql/$PG_VERSION/data/pg_hba.conf
+COPY data/postgresql.sh /usr/local/bin/postgresql.sh
+
+# Change own user
+RUN chown -R postgres:postgres /var/lib/pgsql/$PG_VERSION/data/* && \
+    usermod -G wheel postgres && \
+    sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers && \
+    chmod +x /usr/local/bin/postgresql.sh
+
+# Set volume
+VOLUME ["/var/lib/pgsql"]
+
+# Set username
+USER postgres
+
+# Run PostgreSQL Server
+CMD ["/bin/bash", "/usr/local/bin/postgresql.sh"]
+
+# Expose ports.
+EXPOSE 5432
