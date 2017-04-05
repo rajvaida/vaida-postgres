@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Version
-PG_VERSION="9.6"
+PG_VERSION="9.4"
 
 #Settings
 DB_NAME=${DB_NAME:-}
@@ -9,8 +9,8 @@ DB_USER=${DB_USER:-}
 DB_PASS=${DB_PASS:-}
 
 PG_PORT=5432
-PG_CONFDIR="/var/lib/pgsql/9.6/data"
-PG_CTL="/usr/pgsql-9.6/bin/pg_ctl"
+PG_CONFDIR="/var/lib/pgsql/$PG_VERSION/data"
+PG_CTL="/usr/pgsql-$PG_VERSION/bin/pg_ctl"
 PG_USER="postgres"
 PSQL="/bin/psql"
 
@@ -62,7 +62,7 @@ create_dbuser() {
 
 postgresql_server () {
   
-  /usr/pgsql-9.6/bin/postgres -D /var/lib/pgsql/9.6/data -p $PG_PORT
+  /usr/pgsql-$PG_VERSION/bin/postgres -D /var/lib/pgsql/$PG_VERSION/data -p $PG_PORT
 }
 
 create_clipper_base_tbl() {
@@ -73,6 +73,6 @@ create_clipper_base_tbl() {
 ####
 ####
 create_dbuser
-echo "Starting PostgreSQL 9.6 server..."
+echo "Starting PostgreSQL $PG_VERSION server..."
 postgresql_server
-create_clipper_base_tbl
+clipper_base_tbl
