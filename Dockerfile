@@ -35,10 +35,10 @@ ENV PGVERSION 96
 
 # Set the environment variables
 ENV HOME /var/lib/pgsql
-ENV PGDATA /var/lib/pgsql/9.4/data
+ENV PGDATA /var/lib/pgsql/$PG_VERSION/data
 
 # Install postgresql and run InitDB
-RUN rpm -vih https://download.postgresql.org/pub/repos/yum/$PG_VERSION/redhat/rhel-7-x86_64/pgdg-centos$PGVERSION-$PG_VERSION-2.noarch.rpm && \
+RUN rpm -vih https://download.postgresql.org/pub/repos/yum/$PG_VERSION/redhat/rhel-7-x86_64/pgdg-centos$PGVERSION-$PG_VERSION-3.noarch.rpm && \
     yum update -y && \
     yum install -y sudo \
     pwgen \

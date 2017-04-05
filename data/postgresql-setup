@@ -2,9 +2,9 @@
 #
 # postgresql-setup	Initialization and upgrade operations for PostgreSQL
 
-# PGVERSION is the full package version, e.g., 9.4.0
+# PGVERSION is the full package version, e.g., 9.6.3
 # Note: the specfile inserts the correct value during package build
-PGVERSION=9.6.2
+PGVERSION=9.6.3
 # PGMAJORVERSION is major version, e.g., 9.4 (this should match PG_VERSION)
 PGMAJORVERSION=`echo "$PGVERSION" | sed 's/^\([0-9]*\.[0-9]*\).*$/\1/'`
 # PGENGINE is the directory containing the postmaster executable
