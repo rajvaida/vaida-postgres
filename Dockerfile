@@ -29,9 +29,6 @@ CMD ["/bin/bash", "/usr/local/bin/CIS_Hardening.sh"]
 CMD ["bash"]
 
 
-# Postgresql version
-ENV PG_VERSION 9.6
-ENV PGVERSION 96
 
 # Set the environment variables
 ENV HOME /var/lib/pgsql
