@@ -70,14 +70,14 @@ perform_initdb(){
     chmod go-rwx "$PGDATA/pg_log"
     [ -x /sbin/restorecon ] && /sbin/restorecon "$PGDATA/pg_log"
 
-    if [ -f "$PGDATA/9.6.3" ]; then
+    if [ -f "$PGDATA/PG_VERSION" ]; then
         return 0
     fi
     return 1
 }
 
 initdb(){
-    if [ -f "$PGDATA/9.6.3" ]; then
+    if [ -f "$PGDATA/PG_VERSION" ]; then
         echo $"Data directory is not empty!"
         echo
         script_result=1
