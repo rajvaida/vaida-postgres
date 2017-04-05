@@ -65,8 +65,14 @@ postgresql_server () {
   /usr/pgsql-$PG_VERSION/bin/postgres -D /var/lib/pgsql/$PG_VERSION/data -p $PG_PORT
 }
 
+create_clipper_base_tbl() {
+	echo "Creating base table!"
+	psql -v ON_ERROR_STOP=1 -U ${PG_USER} -d ${DB_NAME} -a -f /usr/local/bin/baseTable.sql
+}
+
 ####
 ####
 create_dbuser
 echo "Starting PostgreSQL $PG_VERSION server..."
 postgresql_server
+create_clipper_base_tbl

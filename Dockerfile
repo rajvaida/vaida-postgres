@@ -18,6 +18,13 @@ ENV HOME /root
 # Working directory
 WORKDIR /root
 
+#Hardening
+COPY data/CIS_Hardening.sh /usr/local/bin/CIS_Hardening.sh
+RUN chmod +x /usr/local/bin/CIS_Hardening.sh
+CMD ["/bin/bash", "/usr/local/bin/CIS_Hardening.sh"]
+
+
+
 # Default command
 CMD ["bash"]
 
@@ -53,12 +60,14 @@ RUN /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup initdb
 COPY data/postgresql.conf /var/lib/pgsql/$PG_VERSION/data/postgresql.conf
 COPY data/pg_hba.conf /var/lib/pgsql/$PG_VERSION/data/pg_hba.conf
 COPY data/postgresql.sh /usr/local/bin/postgresql.sh
+COPY data/baseTable.sql /usr/local/bin/baseTable.sql
 
 # Change own user
 RUN chown -R postgres:postgres /var/lib/pgsql/$PG_VERSION/data/* && \
     usermod -G wheel postgres && \
     sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers && \
-    chmod +x /usr/local/bin/postgresql.sh
+    chmod +x /usr/local/bin/postgresql.sh \
+	chmod +x /usr/local/bin/baseTable.sql
 
 # Set volume
 VOLUME ["/var/lib/pgsql"]
