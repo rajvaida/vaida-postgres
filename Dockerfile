@@ -42,7 +42,7 @@ WORKDIR /root
 CMD ["bash"]
 
 COPY data/CIS_Hardening.sh /usr/local/bin/CIS_Hardening.sh
-chmod +x /usr/local/bin/CIS_Hardening.sh
+RUN chmod +x /usr/local/bin/CIS_Hardening.sh
 CMD ["/bin/bash", "/usr/local/bin/CIS_Hardening.sh"]
 
 
