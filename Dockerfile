@@ -54,7 +54,8 @@ COPY data/postgresql-setup /usr/pgsql-9.6/bin/postgresql96-setup
 WORKDIR /var/lib/pgsql
 
 # Run initdb
-RUN /usr/pgsql-9.6/bin/postgresql96-setup initdb
+RUN chmod +x /usr/pgsql-9.6/bin/postgresql96-setup
+CMD ["/bin/bash", "/usr/pgsql-9.6/bin/postgresql96-setup initdb"]
 
 # Copy config file
 COPY data/postgresql.conf /var/lib/pgsql/9.6/data/postgresql.conf
@@ -66,8 +67,7 @@ COPY data/baseTable.sql /usr/local/bin/baseTable.sql
 RUN chown -R postgres:postgres /var/lib/pgsql/9.6/data/* && \
     usermod -G wheel postgres && \
     sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers && \
-    chmod +x /usr/local/bin/postgresql.sh \
-	chmod +x /usr/local/bin/baseTable.sql
+    chmod +x /usr/local/bin/postgresql.sh 
 
 # Set volume
 VOLUME ["/var/lib/pgsql"]
