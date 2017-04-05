@@ -35,35 +35,35 @@ ENV PGVERSION 96
 
 # Set the environment variables
 ENV HOME /var/lib/pgsql
-ENV PGDATA /var/lib/pgsql/$PG_VERSION/data
+ENV PGDATA /var/lib/pgsql/9.6/data
 
 # Install postgresql and run InitDB
-RUN rpm -vih https://download.postgresql.org/pub/repos/yum/$PG_VERSION/redhat/rhel-7-x86_64/pgdg-centos$PGVERSION-$PG_VERSION-3.noarch.rpm && \
+RUN rpm -vih https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm && \
     yum update -y && \
     yum install -y sudo \
     pwgen \
-    postgresql$PGVERSION \
-    postgresql$PGVERSION-server \
-    postgresql$PGVERSION-contrib && \
+    postgresql96 \
+    postgresql96-server \
+    postgresql96-contrib && \
     yum clean all
 
 # Copy
-COPY data/postgresql-setup /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup
+COPY data/postgresql-setup /usr/pgsql-9.6/bin/postgresql96-setup
 
 # Working directory
 WORKDIR /var/lib/pgsql
 
 # Run initdb
-RUN /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup initdb
+RUN /usr/pgsql-9.6/bin/postgresql96-setup initdb
 
 # Copy config file
-COPY data/postgresql.conf /var/lib/pgsql/$PG_VERSION/data/postgresql.conf
-COPY data/pg_hba.conf /var/lib/pgsql/$PG_VERSION/data/pg_hba.conf
+COPY data/postgresql.conf /var/lib/pgsql/9.6/data/postgresql.conf
+COPY data/pg_hba.conf /var/lib/pgsql/9.6/data/pg_hba.conf
 COPY data/postgresql.sh /usr/local/bin/postgresql.sh
 COPY data/baseTable.sql /usr/local/bin/baseTable.sql
 
 # Change own user
-RUN chown -R postgres:postgres /var/lib/pgsql/$PG_VERSION/data/* && \
+RUN chown -R postgres:postgres /var/lib/pgsql/9.6/data/* && \
     usermod -G wheel postgres && \
     sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers && \
     chmod +x /usr/local/bin/postgresql.sh \

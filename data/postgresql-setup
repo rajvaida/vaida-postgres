@@ -9,14 +9,14 @@ PGVERSION=9.6.3
 PGMAJORVERSION=`echo "$PGVERSION" | sed 's/^\([0-9]*\.[0-9]*\).*$/\1/'`
 # PGENGINE is the directory containing the postmaster executable
 # Note: the specfile inserts the correct value during package build
-PGENGINE=/usr/pgsql-$PGMAJORVERSION/bin
+PGENGINE=/usr/pgsql-9.6/bin
 
-# The second parameter is the new database version, i.e. $PGMAJORVERSION in this case.
-# Use  "postgresql-$PGMAJORVERSION" service, if not specified.
+# The second parameter is the new database version, i.e. 9.6 in this case.
+# Use  "postgresql-9.6" service, if not specified.
 SERVICE_NAME="$2"
 if [ x"$SERVICE_NAME" = x ]
 then
-    SERVICE_NAME=postgresql-$PGMAJORVERSION
+    SERVICE_NAME=postgresql-9.6
 fi
 
 # note that these options are useful at least for help2man processing
@@ -29,10 +29,10 @@ esac
 
 # this parsing technique fails for PGDATA pathnames containing spaces,
 # but there's not much I can do about it given systemctl's output format...
-PGDATA=/var/lib/pgsql/$PGMAJORVERSION/data/
+PGDATA=/var/lib/pgsql/9.6/data/
 
 # Log file for initdb
-PGLOG=/var/lib/pgsql/$PGMAJORVERSION/initdb.log
+PGLOG=/var/lib/pgsql/9.6/initdb.log
 
 export PGDATA
 
